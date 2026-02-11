@@ -17,8 +17,8 @@ from torch.utils.data import Dataset, DataLoader
 
 print("Loading sequences...")
 
-human_sequences = {record.id: str(record.seq) for record in SeqIO.parse("/data/tianlab/Eric/AINUC/human.fasta", "fasta")}
-positive_sequences = {record.id: str(record.seq) for record in SeqIO.parse("/data/tianlab/Eric/AINUC/EXP.fasta", "fasta")}
+human_sequences = {record.id: str(record.seq) for record in SeqIO.parse("/data/RichardLuLab/Eric/AINUC/human.fasta", "fasta")}
+positive_sequences = {record.id: str(record.seq) for record in SeqIO.parse("/data/RichardLuLab/Eric/AINUC/EXP.fasta", "fasta")}
 positive_ids = set(positive_sequences.keys())
 
 negative_ids = [pid for pid in human_sequences if pid not in positive_ids]
@@ -208,11 +208,7 @@ df = pd.DataFrame({
     "Predicted_Nucleolus": ["Yes" if p==1 else "No" for p in preds],
     "Probability": probs
 })
-df.to_csv("/data/tianlab/Eric/AINUC/nucleolus_predictions_mlp_motif4_8.csv", index=False)
-print("✅ 预测完成，结果保存为 nucleolus_predictions_mlp_motif4_8.csv")
-
-
-
+df.to_csv("/data/RichardLuLab/Eric/AINUC/nucleolus_predictions_mlp_motif4_8.csv", index=False)
 
 print("Predicting all human proteins (excluding known positives)...")
 
@@ -245,7 +241,7 @@ df = pd.DataFrame({
     "Predicted_Nucleolus": ["Yes" if p==1 else "No" for p in preds],
     "Probability": probs
 })
-df.to_csv("/data/tianlab/Eric/AINUC/nucleolus_predictions_mlp_motif4_8_no_positive.csv", index=False)
+df.to_csv("/data/RichardLuLab/Eric/AINUC/nucleolus_predictions_mlp_motif4_8_no_positive.csv", index=False)
 
 
 motif_feature_cols = [f"motif_{mot}" for mot in motifs]
@@ -311,7 +307,7 @@ combined_scores = probs * motif_scores_norm
 df["Motif_Score"] = motif_scores_norm
 df["Combined_Score"] = combined_scores
 df = df.sort_values("Combined_Score", ascending=False)
-df.to_csv("/data/tianlab/Eric/AINUC/nucleolus_predictions_enriched_motif.csv", index=False)
+df.to_csv("/data/RichardLuLab/Eric/AINUC/nucleolus_predictions_enriched_motif.csv", index=False)
 print(" Saved: nucleolus_predictions_enriched_motif.csv")
 
 
@@ -345,7 +341,7 @@ def query_uniprot_gene(acc):
     return None
 
 print("🔍 Mapping protein IDs to gene names via UniProt API...")
-df = pd.read_csv("/data/tianlab/Eric/AINUC/nucleolus_predictions_enriched_motif.csv")
+df = pd.read_csv("/data/RichardLuLab/Eric/AINUC/nucleolus_predictions_enriched_motif.csv")
 
 gene_names = []
 for pid in tqdm(df["Protein_ID"], desc="Querying UniProt"):
@@ -355,6 +351,6 @@ for pid in tqdm(df["Protein_ID"], desc="Querying UniProt"):
     time.sleep(0.2) 
 
 df["Gene_Name"] = gene_names
-df.to_csv("/data/tianlab/Eric/AINUC/nucleolus_predictions_enriched_motif_gene.csv", index=False)
+df.to_csv("/data/RichardLuLab/Eric/AINUC/nucleolus_predictions_enriched_motif_gene.csv", index=False)
 
 

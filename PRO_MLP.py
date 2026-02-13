@@ -340,7 +340,7 @@ def query_uniprot_gene(acc):
                 return parts[1]
     return None
 
-print("🔍 Mapping protein IDs to gene names via UniProt API...")
+print(" Mapping protein IDs to gene names via UniProt API...")
 df = pd.read_csv("/data/RichardLuLab/Eric/AINUC/nucleolus_predictions_enriched_motif.csv")
 
 gene_names = []
@@ -352,5 +352,6 @@ for pid in tqdm(df["Protein_ID"], desc="Querying UniProt"):
 
 df["Gene_Name"] = gene_names
 df.to_csv("/data/RichardLuLab/Eric/AINUC/nucleolus_predictions_enriched_motif_gene.csv", index=False)
+
 
 
